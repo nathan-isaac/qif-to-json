@@ -8,9 +8,9 @@ import (
 
 func TestParsingTags(t *testing.T) {
 	var tagTests = []struct {
-		name  string
-		in  string
-		out []Tag
+		name string
+		in   string
+		out  []Tag
 	}{
 		{
 			"empty string",
@@ -24,7 +24,7 @@ func TestParsingTags(t *testing.T) {
 NExample Name
 ^
 `,
-		[]Tag{{
+			[]Tag{{
 				name: "Example Name",
 			}},
 		},
@@ -35,7 +35,7 @@ NExample Name
 DExample Description
 ^
 `,
-		[]Tag{{
+			[]Tag{{
 				description: "Example Description",
 			}},
 		},
@@ -59,7 +59,7 @@ DExample Description
 ^
 `,
 			[]Tag{{
-				name: "Example Name",
+				name:        "Example Name",
 				description: "Example Description",
 			}},
 		},
@@ -76,7 +76,7 @@ DTag 2 Description
 			[]Tag{{
 				name: "Tag 1",
 			}, {
-				name: "Tag 2",
+				name:        "Tag 2",
 				description: "Tag 2 Description",
 			}},
 		},
@@ -88,7 +88,7 @@ DTag 2 Description
 			parser := CreateParser()
 			parser.parse(handler)
 
-			assert.Equal(t, tt.out, parser.tags)
+			assert.Equal(t, tt.out, parser.qif.tags)
 		})
 	}
 }

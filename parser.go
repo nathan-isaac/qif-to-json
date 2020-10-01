@@ -5,17 +5,14 @@ import (
 	"io"
 )
 
-type Tag struct {
-	name string
-	description string
-}
-
 type Parser struct {
-	tags []Tag
+	qif *Qif
 }
 
 func CreateParser() *Parser {
-	return &Parser{tags: []Tag{}}
+	return &Parser{
+		qif: NewQif([]Tag{}),
+	}
 }
 
 func (p *Parser) parse(handle io.Reader) {
@@ -39,7 +36,7 @@ func (p *Parser) parse(handle io.Reader) {
 		}
 
 		if first_char == "^" {
-			p.tags = append(p.tags, tag)
+			p.qif.AddTag(tag)
 		}
 	}
 }
