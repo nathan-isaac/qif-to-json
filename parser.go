@@ -16,27 +16,17 @@ func CreateParser() *Parser {
 }
 
 func (p *Parser) parse(handle io.Reader) {
-	tag := Tag{}
-
+	chunker := NewChunker()
 	scanner := bufio.NewScanner(handle)
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		if len(line) == 0 {
-			continue
-		}
 
-		first_char := line[0:1]
+		chunker.addLine(line)
+	}
 
-		if first_char == "N" {
-			tag.name = line[1:]
-		}
-		if first_char == "D" {
-			tag.description = line[1:]
-		}
-
-		if first_char == "^" {
-			p.qif.AddTag(tag)
-		}
+	for _, chunk := range chunker.GetChunks() {
+		tp := TagParser{}
+		tp.AddChunkToQif(chunk, p.qif)
 	}
 }
