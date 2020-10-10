@@ -6,6 +6,11 @@ import (
 	"io"
 )
 
+// Maybe call this TypeMapper?
+type TypeParser interface {
+	AddChunkToQif(chunk Chunk, qif *Qif)
+}
+
 type Parser struct {
 	qif *Qif
 }
@@ -22,13 +27,17 @@ func (p *Parser) Parse(handle io.Reader) {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-
 		chunker.addLine(line)
 	}
 
+	parsers := map[string]TypeParser{
+		"Tag": &TagParser{},
+	}
+
 	for _, chunk := range chunker.GetChunks() {
-		tp := TagParser{}
-		tp.AddChunkToQif(chunk, p.qif)
+		if val, ok := parsers[chunk.Type]; ok {
+			val.AddChunkToQif(chunk, p.qif)
+		}
 	}
 }
 
