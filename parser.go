@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"io"
 )
 
@@ -15,7 +16,7 @@ func CreateParser() *Parser {
 	}
 }
 
-func (p *Parser) parse(handle io.Reader) {
+func (p *Parser) Parse(handle io.Reader) {
 	chunker := NewChunker()
 	scanner := bufio.NewScanner(handle)
 
@@ -29,4 +30,9 @@ func (p *Parser) parse(handle io.Reader) {
 		tp := TagParser{}
 		tp.AddChunkToQif(chunk, p.qif)
 	}
+}
+
+func (p *Parser) Json() string {
+	qif, _ := json.MarshalIndent(p.qif, "", "  ")
+	return string(qif)
 }

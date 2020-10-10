@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 type Line string
 
 func (l Line) firstCharacterIs(s string) bool {
@@ -20,6 +22,7 @@ func (c *Chunk) addLine(line string) {
 }
 
 type Chunker struct {
+	lastType string
 	lastChunk Chunk
 	chunks    []Chunk
 }
@@ -33,7 +36,12 @@ func (c *Chunker) addLine(line string) {
 
 	firstChar := line[0:1]
 
+	if firstChar == "!" {
+		c.lastType = strings.TrimPrefix(line, "!Type:")
+	}
+
 	if firstChar == "^" {
+		c.lastChunk.Type = c.lastType
 		c.chunks = append(c.chunks, c.lastChunk)
 		c.lastChunk = Chunk{}
 	}

@@ -1,22 +1,24 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"os"
 )
 
 func main() {
-	analyze("data/quicken.QIF")
-}
+	filePath := flag.String("file", "", "File path to .qif file.")
+	flag.Parse()
 
-func analyze(file string) error {
-	handle, err := os.Open(file)
+	handler, err := os.Open(*filePath)
 
 	if err != nil {
-		return err
+		fmt.Println(err)
 	}
-	defer handle.Close()
-	p := Parser{}
+	defer handler.Close()
 
-	p.parse(handle)
-	return nil
+	parser := CreateParser()
+	parser.Parse(handler)
+
+	fmt.Println(parser.Json())
 }

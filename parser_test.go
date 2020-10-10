@@ -18,40 +18,49 @@ func TestParsingTags(t *testing.T) {
 			[]Tag{},
 		},
 		{
-			"tag with name",
+			"ignore types without a parser",
+			`
+!Type:NoParser
+NExample Name
+^
+`,
+			[]Tag{},
+		},
+		{
+			"tag with Name",
 			`
 !Type:Tag
 NExample Name
 ^
 `,
 			[]Tag{{
-				name: "Example Name",
+				Name: "Example Name",
 			}},
 		},
 		{
-			"tag with description",
+			"tag with Description",
 			`
 !Type:Tag
 DExample Description
 ^
 `,
 			[]Tag{{
-				description: "Example Description",
+				Description: "Example Description",
 			}},
 		},
 		{
-			"tag with description",
+			"tag with Description",
 			`
 !Type:Tag
 DExample Description
 ^
 `,
 			[]Tag{{
-				description: "Example Description",
+				Description: "Example Description",
 			}},
 		},
 		{
-			"tag with name and description",
+			"tag with Name and Description",
 			`
 !Type:Tag
 NExample Name
@@ -59,12 +68,12 @@ DExample Description
 ^
 `,
 			[]Tag{{
-				name:        "Example Name",
-				description: "Example Description",
+				Name:        "Example Name",
+				Description: "Example Description",
 			}},
 		},
 		{
-			"multiple tags",
+			"multiple Tags",
 			`
 !Type:Tag
 NTag 1
@@ -74,10 +83,10 @@ DTag 2 Description
 ^
 `,
 			[]Tag{{
-				name: "Tag 1",
+				Name: "Tag 1",
 			}, {
-				name:        "Tag 2",
-				description: "Tag 2 Description",
+				Name:        "Tag 2",
+				Description: "Tag 2 Description",
 			}},
 		},
 	}
@@ -86,9 +95,9 @@ DTag 2 Description
 		t.Run(tt.name, func(t *testing.T) {
 			handler := strings.NewReader(tt.in)
 			parser := CreateParser()
-			parser.parse(handler)
+			parser.Parse(handler)
 
-			assert.Equal(t, tt.out, parser.qif.tags)
+			assert.Equal(t, tt.out, parser.qif.Tags)
 		})
 	}
 }

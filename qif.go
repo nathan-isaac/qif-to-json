@@ -1,13 +1,18 @@
 package main
 
+type Tag struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
 type Qif struct {
-	tags []Tag
+	Tags []Tag `json:"tags"`
 }
 
 func (q *Qif) AddTag(tag Tag) {
-	q.tags = append(q.tags, tag)
+	q.Tags = append(q.Tags, tag)
 }
 
 func NewQif(tags []Tag) *Qif {
-	return &Qif{tags: tags}
+	return &Qif{Tags: tags}
 }

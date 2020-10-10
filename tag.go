@@ -1,22 +1,21 @@
 package main
 
-type Tag struct {
-	name        string
-	description string
-}
-
 type TagParser struct {}
 
 func (tp *TagParser) AddChunkToQif(chunk Chunk, qif *Qif) {
 	t := Tag{}
 
+	if chunk.Type != "Tag" {
+		return
+	}
+
 	for _, line := range chunk.lines {
 		if line.firstCharacterIs("N") {
-			t.name = line.Value()
+			t.Name = line.Value()
 		}
 
 		if line.firstCharacterIs("D") {
-			t.description = line.Value()
+			t.Description = line.Value()
 		}
 	}
 
