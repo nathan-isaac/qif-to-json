@@ -32,6 +32,7 @@ func (p *Parser) Parse(handle io.Reader) {
 
 	parsers := map[string]TypeParser{
 		"Tag": &TagParser{},
+		"Bank": &TransactionMapper{},
 	}
 
 	for _, chunk := range chunker.GetChunks() {

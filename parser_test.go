@@ -4,6 +4,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestParsingTags(t *testing.T) {
@@ -98,6 +99,50 @@ DTag 2 Description
 			parser.Parse(handler)
 
 			assert.Equal(t, tt.out, parser.qif.Tags)
+		})
+	}
+}
+
+func TestParsingTransactions(t *testing.T) {
+	var transactionTests = []struct {
+		name string
+		in   string
+		out  []Transaction
+	}{
+		{
+			"empty string",
+			"",
+			[]Transaction{},
+		},
+		{
+			"ignore types without a parser",
+			`
+!Type:NoParser
+NExample Name
+^
+`,
+			[]Transaction{},
+		},
+		{
+			"transaction with date",
+			`
+!Type:Bank
+D4/10'14
+^
+`,
+			[]Transaction{{
+				Date: time.Date(2014, 4, 10, 0, 0, 0, 0, time.Local),
+			}},
+		},
+	}
+
+	for _, tt := range transactionTests {
+		t.Run(tt.name, func(t *testing.T) {
+			handler := strings.NewReader(tt.in)
+			parser := CreateParser()
+			parser.Parse(handler)
+
+			assert.Equal(t, tt.out, parser.qif.Transactions)
 		})
 	}
 }
